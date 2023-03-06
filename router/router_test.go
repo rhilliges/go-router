@@ -33,11 +33,17 @@ func TestRegisteringHandlerForPathWithVariable(t *testing.T) {
 	}
 }
 
-func TestReadPathVariableFromRequest(t *testing.T) {
+func TestCallCorrectHandler(t *testing.T) {
 	router := NewRouter()
-	handler1 := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
-	router.Register("path/{variable}", handler1)
-	request := httptest.NewRequest("GET", "path/to/handler", nil)
+	called := false
+	handler1 := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		called = true
+	})
+	router.Register("path/to/handler", handler1)
+	request := httptest.NewRequest("GET", "http://domain.org/path/to/handler", nil)
 	writer := httptest.NewRecorder()
 	router.ServeHTTP(writer, request)
+	if called != true {
+		t.Error("handler was not called")
+	}
 }

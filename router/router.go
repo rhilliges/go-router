@@ -16,6 +16,9 @@ func NewRouter() *Router {
 }
 
 func (r *Router) Register(path string, handler http.HandlerFunc) {
+	if !strings.HasPrefix(path, "/") {
+		path = "/" + path
+	}
 	r.routes[path] = handler
 }
 
@@ -30,6 +33,9 @@ func (r *Router) GetHandler(path string) http.HandlerFunc {
 }
 
 // ServeHTTP implements http.Handler
-func (*Router) ServeHTTP(http.ResponseWriter, *http.Request) {
-
+func (r *Router) ServeHTTP(w http.ResponseWriter, request *http.Request) {
+	handler := r.routes[request.URL.Path]
+	if handler != nil {
+		handler(w, request)
+	}
 }
