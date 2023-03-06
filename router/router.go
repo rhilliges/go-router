@@ -28,3 +28,8 @@ func (r *Router) GetHandler(path string) http.HandlerFunc {
 	}
 	return nil
 }
+
+// ServeHTTP implements http.Handler
+func (*Router) ServeHTTP(http.ResponseWriter, *http.Request) {
+
+}

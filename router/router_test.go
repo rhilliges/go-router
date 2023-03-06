@@ -3,6 +3,7 @@ package router
 import (
 	"fmt"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 )
 
@@ -30,4 +31,13 @@ func TestRegisteringHandlerForPathWithVariable(t *testing.T) {
 	if handler1Ref != handler2Ref {
 		t.Error("expected same handler")
 	}
+}
+
+func TestReadPathVariableFromRequest(t *testing.T) {
+	router := NewRouter()
+	handler1 := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
+	router.Register("path/{variable}", handler1)
+	request := httptest.NewRequest("GET", "path/to/handler", nil)
+	writer := httptest.NewRecorder()
+	router.ServeHTTP(writer, request)
 }
