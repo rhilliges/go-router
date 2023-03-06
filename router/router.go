@@ -23,6 +23,9 @@ func (r *Router) Register(path string, handler http.HandlerFunc) {
 }
 
 func (r *Router) GetHandler(path string) http.HandlerFunc {
+	if !strings.HasPrefix(path, "/") {
+		path = "/" + path
+	}
 	parts := strings.Split(path, "/")
 	for k, handler := range r.routes {
 		if strings.Split(k, "/")[0] == parts[0] {
@@ -37,8 +40,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, request *http.Request) {
 	handler := r.routes[request.URL.Path]
 	if handler == nil {
 		w.WriteHeader(http.StatusNotFound)
+		return
 	}
-	if handler != nil {
-		handler(w, request)
-	}
+	handler(w, request)
 }
