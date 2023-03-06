@@ -35,6 +35,9 @@ func (r *Router) GetHandler(path string) http.HandlerFunc {
 // ServeHTTP implements http.Handler
 func (r *Router) ServeHTTP(w http.ResponseWriter, request *http.Request) {
 	handler := r.routes[request.URL.Path]
+	if handler == nil {
+		w.WriteHeader(http.StatusNotFound)
+	}
 	if handler != nil {
 		handler(w, request)
 	}
