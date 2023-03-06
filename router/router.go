@@ -1,6 +1,9 @@
 package router
 
-import "net/http"
+import (
+	"net/http"
+	"strings"
+)
 
 type Router struct {
 	routes map[string]http.HandlerFunc
@@ -17,5 +20,11 @@ func (r *Router) Register(path string, handler http.HandlerFunc) {
 }
 
 func (r *Router) GetHandler(path string) http.HandlerFunc {
-	return r.routes[path]
+	parts := strings.Split(path, "/")
+	for k, handler := range r.routes {
+		if strings.Split(k, "/")[0] == parts[0] {
+			return handler
+		}
+	}
+	return nil
 }
