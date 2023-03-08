@@ -1,0 +1,1 @@
+``NOTE: This is just a personal project to practice TDD and Go.``
